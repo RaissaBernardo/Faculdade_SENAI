@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechCommunity - Cadastrar Evento</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="body">
+    <header>
+        <div class="logo">TechCommunity</div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="eventos.html">Eventos</a></li>
+        <li><a href="cadastrar-evento.html">Cadastrar Eventos</a></li>
+        <li><a href="sobre.html">Sobre Nós</a></li>
+        <li><a href="contato.html">Contato</a></li>
+    </ul>
+</nav>
+</header>
+
+<h1 class="titCad">Cadastro de Eventos</h1>
+<div id="blocoCadastro">
+    <form id="cadastroEvento">
+        <div class="form-group">
+            <label for="nomeEvento">Nome do Evento:</label>
+            <input type="text" id="nomeEvento" name="nomeEvento" required>
+        </div>
+        <div class="form-group">
+            <label for="dataEvento">Data:</label>
+            <input type="date" id="dataEvento" name="dataEvento">
+        </div>
+        <div class="form-group">
+            <label for="horaEvento">Hora:</label>
+            <input type="time" id="horaEvento" name="horaEvento">
+        </div>
+        <div class="form-group">
+            <label for="localEvento">Local do Evento:</label>
+            <input type="text" id="localEvento" name="localEvento" required>
+        </div>
+        <div class="form-group">
+            <label for="descricaoEvento">Descrição:</label>
+            <input type="text" id="descricaoEvento" name="descricaoEvento">
+        </div>
+        <div class="form-group">
+            <label for="categoria">Categoria:</label>
+            <select name="categoria" id="categoria">
+                <option value="Workshop">Workshop</option>
+                <option value="Meetup">Meetup</option>
+                <option value="Palestra">Palestra</option>
+                <option value="Coding Dojo">Coding Dojo</option>
+                <option value="Webinar">Webinar</option>
+            </select>
+        </div>
+        <label for="imagemEvento">Imagem do evento:</label>
+        <input type="file" id="imagemEvento" accept="image/*">
+
+        <button type="submit">Cadastrar</button>
+    </form>
+</div>
+<script src="js/script.js"></script>
+</body>
+</html>

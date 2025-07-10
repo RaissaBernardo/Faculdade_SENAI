@@ -1,0 +1,507 @@
+/*página index - rafael*/ 
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f6fc;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #813843;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 40px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+header .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+#campoBusca {
+  padding: 8px;
+  margin: 20px 0;
+  width: 900px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+#busca{
+  display: flex;  
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
+
+#botao {
+  padding: 8px 16px;
+  margin-left: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+  padding: 0;
+  margin: 0;
+}
+
+nav ul li a {
+  position: relative;
+  color: white;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  background-color: transparent;
+}
+
+nav ul li a:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+nav ul li a::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  left: 0;
+  bottom: 0;
+  background-color: #ffffff;
+  transition: width 0.3s ease;
+}
+
+nav ul li a:hover::after {
+  width: 100%;
+}
+
+h1 {
+  text-align: center;
+  color: #813843;
+  margin-top: 30px;
+}
+
+.cards {       /*Cards dos eventos*/
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+  gap: 20px;
+  padding: 20px;
+  justify-items: center;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  max-width: 300px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 18px rgba(129, 56, 67, 0.3);
+  cursor: pointer;
+}
+
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: contain; /* mostra a imagem inteira */
+  background-color: #fdfdfd; /* fundo claro para imagens com transparência */
+  border-radius: 10px;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease;
+}
+
+.card:hover img {
+  transform: scale(1.03);
+}
+
+.card h3 {
+  font-size: 1.1rem;
+  margin: 10px 0 8px;
+  color: #167aec;
+}
+
+.card p {
+  font-size: 14px;
+  color: #444;
+  line-height: 1.5;
+  margin: 4px 0;
+}
+
+.card p strong {
+  color: #000;
+  font-weight: bold;
+}
+
+.eventos-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.card-evento {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  width: 300px;
+  box-shadow: 0 0 10px #431d22;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.card-evento:hover {
+  transform: scale(1.03);
+}
+
+.card-evento img {
+  width: 200%;
+  height: 150px;
+  object-fit: contain; /* Para mostrar a imagem inteira */
+}
+
+.card-evento .info {
+  padding: 15px;
+}
+
+.card-evento h3 {
+  margin: 0 0 10px;
+  color: #813843;
+}
+
+.card-evento p {
+  margin: 5px 0;
+  font-size: 0.9em;
+  color: #333;
+}
+
+
+footer{
+  background-color: #813843;
+  text-align: center;
+  padding: 30px;
+  color: white;
+}
+/*fim da página index - rafael*/ 
+/*página sobre nós - raissa*/ 
+.sobre-nos {
+  background-color: #ffffff; 
+  color: #813843; 
+  padding: 50px 20px;
+  font-family: Arial, sans-serif;
+}
+
+.sobre-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.sobre-header h1 {
+  font-size: 2.5rem;
+  color: #F5005B; 
+  margin-bottom: 10px;
+}
+
+.sobre-header .slogan {
+  font-size: 1.2rem;
+  color: #FC9F13; 
+  font-weight: bold;
+}
+
+.sobre-conteudo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: center;
+  align-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.sobre-img {
+  width: 350px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px #FBB5C0; 
+}
+
+.sobre-texto {
+  max-width: 500px;
+}
+
+.sobre-texto h2 {
+  color: #C8BD4A; 
+  font-size: 1.5rem;
+  margin-top: 20px;
+}
+
+.sobre-texto p {
+  color: #333;
+  font-size: 1rem;
+  margin: 10px 0;
+}
+
+/* Pagina evento - Rafael */
+
+.evento {
+  margin-bottom: 40px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 20px;
+}
+
+.evento h2 {
+  color: #167aec;
+  font-size: 1.3em;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.evento-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.evento-img {
+  width: 430px;
+  height: auto;
+}
+
+.evento-info {
+  background-color: #f5f5f5;
+  padding: 15px;
+  border-radius: 5px;
+  flex: 1;
+  min-width: 250px;
+}
+
+.evento-info p {
+  margin: 5px 0;
+  font-size: 0.95em;
+}
+
+/*modal de eventos - raissa*/
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 10% auto;
+  padding: 20px;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.close {
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-modal {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #007BFF;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-modal:hover {
+  background-color: #0056b3;
+}
+
+
+/* Fim da parte do Evento (Rafael) */
+
+
+/*CSS Contato - Pedro*/
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #edf3fa;
+}
+
+.top-bar {
+  background-color: #7c2a34;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-bar .logo {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.menu a {
+  color: white;
+  margin-left: 20px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.content {
+  padding: 40px 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #f5faff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 22px;
+  color: #222;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-form label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  margin-bottom: 20px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.contact-form button {
+  padding: 10px;
+  background-color: #7c2a34;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.contact-form button:hover {
+  background-color: #a13445;
+}
+
+.footer {
+  background-color: #7c2a34;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  margin-top: 40px;
+  font-size: 14px;
+}
+.company-info {
+  margin-top: 40px;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.company-info h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+}
+
+.company-info p {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+/*CSS CADASTRO DE EVENTOS - Karen*/
+#blocoCadastro {
+  background-color: #fc9f13;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  margin-left: 380px;
+  margin-bottom: 40px;
+}
+
+.titCad {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 44px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #f5005b;
+}
+
+form label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+form input, form select {
+    width: 100%;
+    padding: 5px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form button {
+    background-color: #fbb5c0;
+    color: #813843;
+    cursor: pointer;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    margin-left: 220px;
+}
+
+form button:hover {
+    background-color: #c8bd4a;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}

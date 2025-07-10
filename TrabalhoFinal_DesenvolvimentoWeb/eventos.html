@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TechCommunity - Início</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header>
+    <div class="logo">TechCommunity</div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="detalhesEventos.html">Eventos</a></li>
+        <li><a href="cadastrar-evento.html">Cadastrar Eventos</a></li>
+        <li><a href="sobre.html">Sobre Nós</a></li>
+        <li><a href="contato.html">Contato</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Modal de detalhes -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="fecharModal()">&times;</span>
+      <h2 id="modalTitulo"></h2>
+      <p id="modalDataHora"></p>
+      <p id="modalLocal"></p>
+      <p id="modalDescricao"></p>
+      <p id="modalCategoria"></p>
+    </div>
+  </div>
+
+  <main>
+    <div id="busca">
+      <input type="text" id="campoBusca" placeholder="Exemplo: HTML e CSS">
+      <button id="botao" onclick="buscarNaPagina()">🔎</button>
+    </div>
+
+    <section class="destaque">
+      <h1>Todos os Nossos Eventos</h1>
+        <div class="cards">  
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Todos os direitos reservados &copy; 2025</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
