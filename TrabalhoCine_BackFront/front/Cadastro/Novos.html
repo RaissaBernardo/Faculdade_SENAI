@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro de Filme</title>
+    <link rel="stylesheet" href="CSS/Style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Cadastrar Novo Filme</h1>
+      <form id="cadastroFilmeForm">
+        <div class="form-group">
+          <label for="nomeFilme">Nome do Filme:</label>
+          <input
+            type="text"
+            id="nomeFilme"
+            name="nomeFilme"
+            placeholder="Digite o nome do filme"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="urlImagem">URL da Imagem do Filme:</label>
+          <input
+            type="text"
+            id="urlImagem"
+            name="urlImagem"
+            placeholder="Ex: http://exemplo.com/filme.jpg"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="urlImagem">Link do Trailer:</label>
+          <input
+            type="text"
+            id="trailerUrl"
+            name="trailerUrl"
+            placeholder="Ex: http://exemplo.com/trailer.com"
+            required
+          />
+        </div>
+        <button type="submit">Cadastrar Filme</button>
+      </form>
+      <div id="mensagem" class="mensagem"></div>
+      <a href="../index.html" class="botao-voltar">Voltar</a>
+    </div>
+    <script src="JS/Script.js"></script>
+  </body>
+</html>
