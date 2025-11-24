@@ -64,3 +64,89 @@ button {
 button:hover {
     background-color: #0c3f7c;
 }
+
+/* Layout para forms e listas lado a lado em telas maiores */
+.form-area {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.form-card {
+    flex: 1 1 320px;
+}
+
+.list-card {
+    flex: 1 1 320px;
+}
+
+/* Grupos de formulário */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.label {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+/* Lista de itens */
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.item-card {
+    background: #fff;
+    color: #06264d;
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.item-actions {
+    display: flex;
+    gap: 8px;
+}
+
+button.small {
+    padding: 6px 10px;
+    font-size: 14px;
+}
+
+button.danger {
+    background-color: #8b0000;
+}
+
+button.secondary {
+    background-color: #0c3f7c;
+}
+
+/* Espaçamento respeitando o navbar fixo */
+.top-spacer {
+    height: 120px; /* mantém o alinhamento com .container */
+}
+
+/* Responsividade */
+@media (max-width: 800px) {
+    .form-area {
+        flex-direction: column;
+    }
+
+    .container {
+        padding: 0 16px;
+    }
+}
