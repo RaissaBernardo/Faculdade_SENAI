@@ -9,7 +9,7 @@ export default function ProdutoList({ produtos, onEdit, onDelete }) {
                 <div key={p.id} className="card">
                     <strong>{p.nome}</strong>
                     <span>Preço: R$ {p.preco}</span>
-                    <span>Categoria: {p.categoriaId}</span>
+                    <span>Categoria: {p.categoria ? p.categoria.nome : "Sem categoria"}</span>
 
                     <div className="botoes">
                         <button className="edit" onClick={() => onEdit(p)}>Editar</button>

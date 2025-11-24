@@ -1,99 +1,190 @@
-/* ====== GERAL ====== */
-body {
-    background-color: #001f3f; /* azul marinho escuro */
-    font-family: Arial, sans-serif;
+/* ====== RESET ====== */
+* {
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* CENTRALIZA TUDO */
-    color: #fff;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
+/* ====== GERAL ====== */
+body {
+    background-color: #001f3f; /* azul marinho */
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ====== NAVBAR ====== */
 .navbar {
     width: 100%;
     background-color: #f5e9c8;
     padding: 20px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    position: fixed;  /* deixa no topo */
+    position: fixed;
     top: 0;
     left: 0;
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.35);
 }
 
 .navbar h1 {
-    color: #06264d;
-    margin: 0;
     text-align: center;
+    color: #06264d;
     font-size: 32px;
 }
 
-
+/* ====== CONTAINER CENTRAL ====== */
 .container {
     width: 100%;
-    max-width: 600px; /* deixa mais centralizado e limitado */
-    margin-top: 120px; /* espaço para o navbar */
+    max-width: 800px;
+    margin-top: 120px;
+    padding: 0 20px;
 }
 
+/* ====== CARD GENÉRICO ====== */
 .card {
-    background-color: #f5e9c8; /* bege claro */
-    padding: 20px;
-    border-radius: 10px;
+    background-color: #f5e9c8;
+    color: #06264d;
+    padding: 22px;
+    border-radius: 12px;
     margin-bottom: 30px;
-    color: #000;
-    box-shadow: 0 4px 8px rgba(255,255,255,0.2);
+    box-shadow: 0 4px 12px rgba(255,255,255,0.18);
+}
+
+/* ====== FORMULÁRIOS ====== */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.label {
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: -4px;
 }
 
 input {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border-radius: 8px;
-    border: none;
-    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    font-size: 15px;
 }
 
+input:focus {
+    outline: none;
+    border-color: #06264d;
+}
+
+/* Novas regras para alinhar formulários e listas lado a lado */
+.form-area {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+}
+
+/* Wrapper interno do formulário (usa também .card já existente) */
+.form-card {
+    flex: 1 1 0;
+    padding: 18px;
+}
+
+/* Card lateral para listas/pequenos formulários (ex.: categorias) */
+.list-card {
+    width: 300px;
+    flex: 0 0 300px;
+}
+
+/* Ajustes para o formulário de produto */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form h2 {
+    margin-bottom: 6px;
+    color: #06264d;
+}
+
+/* Botões do formulário secundário */
+.form .secondary {
+    align-self: flex-start;
+}
+
+/* Lista de produtos: tornar cada card de produto mais alinhado */
+.lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+/* Especifica aparência dos cards dentro da lista de produtos (não sobrescreve .card global) */
+.lista .card {
+    background: #ffffff;
+    color: #06264d;
+    padding: 14px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.18);
+}
+
+/* Grupo de botões dentro dos cards de produto */
+.botoes {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Pequenas melhorias nos inputs e botões para consistência visual */
+input, select, textarea {
+    font-size: 15px;
+    line-height: 1.2;
+}
+
+/* ====== BOTÕES ====== */
 button {
-    background-color: #06264d; /* escuro */
-    color: #f5e9c8; /* claro */
-    padding: 10px 20px;
+    background-color: #06264d;
+    color: #f5e9c8;
+    padding: 10px 18px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
+    transition: 0.2s;
 }
 
 button:hover {
     background-color: #0c3f7c;
 }
 
-/* Layout para forms e listas lado a lado em telas maiores */
-.form-area {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
+button.secondary {
+    background-color: #0c3f7c;
 }
 
-.form-card {
-    flex: 1 1 320px;
+button.secondary:hover {
+    background-color: #145bb3;
 }
 
-.list-card {
-    flex: 1 1 320px;
+button.danger {
+    background-color: #8b0000;
 }
 
-/* Grupos de formulário */
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 12px;
+button.danger:hover {
+    background-color: #b30000;
 }
 
-.label {
-    font-weight: bold;
-    margin-bottom: 4px;
+button.small {
+    padding: 6px 12px;
+    font-size: 14px;
 }
 
-/* Lista de itens */
+/* ====== LISTA ====== */
 .list {
     display: flex;
     flex-direction: column;
@@ -101,14 +192,14 @@ button:hover {
 }
 
 .item-card {
-    background: #fff;
+    background: #ffffff;
     color: #06264d;
-    padding: 12px;
-    border-radius: 8px;
+    padding: 14px;
+    border-radius: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
 }
 
 .item-info {
@@ -119,34 +210,24 @@ button:hover {
 
 .item-actions {
     display: flex;
-    gap: 8px;
+    gap: 10px;
 }
 
-button.small {
-    padding: 6px 10px;
-    font-size: 14px;
-}
-
-button.danger {
-    background-color: #8b0000;
-}
-
-button.secondary {
-    background-color: #0c3f7c;
-}
-
-/* Espaçamento respeitando o navbar fixo */
-.top-spacer {
-    height: 120px; /* mantém o alinhamento com .container */
-}
-
-/* Responsividade */
-@media (max-width: 800px) {
-    .form-area {
-        flex-direction: column;
+/* ====== RESPONSIVIDADE ====== */
+@media (max-width: 750px) {
+    .container {
+        max-width: 95%;
     }
 
-    .container {
-        padding: 0 16px;
+    .item-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .item-actions,
+    .botoes {
+        width: 100%;
+        justify-content: flex-end;
     }
 }

@@ -3,11 +3,16 @@ import { useState } from "react";
 export default function ProdutoForm({ onSubmit, produtoEditando }) {
     const [nome, setNome] = useState(produtoEditando?.nome || "");
     const [preco, setPreco] = useState(produtoEditando?.preco || "");
-    const [categoriaId, setCategoriaId] = useState(produtoEditando?.categoriaId || "");
+    const [categoriaId, setCategoriaId] = useState(produtoEditando?.categoria?.id || "");
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit({ nome, preco: Number(preco), categoriaId: Number(categoriaId) });
+
+        onSubmit({
+            nome,
+            preco: Number(preco),
+            categoria: categoriaId ? { id: Number(categoriaId) } : null
+        });
 
         setNome("");
         setPreco("");
