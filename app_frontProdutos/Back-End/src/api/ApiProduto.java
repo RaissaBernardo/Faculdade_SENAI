@@ -24,9 +24,7 @@ public class ApiProduto {
 
         port(4567);
 
-        // =========================
         //        CORS
-        // =========================
         options("/*", (request, response) -> {
 
             String reqHeaders = request.headers("Access-Control-Request-Headers");
