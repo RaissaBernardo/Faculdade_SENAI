@@ -4,6 +4,7 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,9 +39,7 @@ public class ClienteDao {
         return clientes;
     }
 
-    // ------------------------------------
-    // READ BY CPF
-    // ------------------------------------
+//pelo cpf
     public Cliente buscarPorCpf(String cpf) {
         Cliente cliente = null;
         String sql = "SELECT cpf, nome, telefone, email FROM cliente WHERE cpf = ?";
@@ -69,9 +68,7 @@ public class ClienteDao {
         return cliente;
     }
 
-    // ------------------------------------
-    // CREATE
-    // ------------------------------------
+//inserir
     public void inserir(Cliente cliente) {
         String sql = "INSERT INTO cliente (cpf, nome, telefone, email) VALUES (?, ?, ?, ?)";
 
@@ -91,9 +88,7 @@ public class ClienteDao {
         }
     }
 
-    // ------------------------------------
-    // UPDATE
-    // ------------------------------------
+    //editar
     public void atualizar(Cliente cliente) {
         String sql = "UPDATE cliente SET nome = ?, telefone = ?, email = ? WHERE cpf = ?";
 
@@ -113,9 +108,7 @@ public class ClienteDao {
         }
     }
 
-    // ------------------------------------
-    // DELETE
-    // ------------------------------------
+//apagar
     public void deletar(String cpf) {
         String sql = "DELETE FROM cliente WHERE cpf = ?";
 
