@@ -11,10 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ProdutoDao {
-    
-    /**
-     * Insere um novo produto no banco
-     */
+//insert um produto no banco
     public void inserir(Produto produto) throws SQLException {
         String sql = "INSERT INTO Produto (tamanho, cor, marca, genero, preco, estoque, descricao) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -32,7 +29,7 @@ public class ProdutoDao {
             
             stmt.executeUpdate();
             
-            // Recupera o ID gerado automaticamente
+            // pega o id gerado aurotmaticamente
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
                     produto.setId(rs.getInt(1));
@@ -41,9 +38,7 @@ public class ProdutoDao {
         }
     }
     
-    /**
-     * Lista todos os produtos
-     */
+   //lista produtos
     public List<Produto> listarTodos() throws SQLException {
         String sql = "SELECT * FROM Produto";
         List<Produto> produtos = new ArrayList<>();
@@ -60,9 +55,7 @@ public class ProdutoDao {
         return produtos;
     }
     
-    /**
-     * Busca produto por ID
-     */
+//busca produto por id
     public Produto buscarPorId(int id) throws SQLException {
         String sql = "SELECT * FROM Produto WHERE id = ?";
         
@@ -81,9 +74,7 @@ public class ProdutoDao {
         return null;
     }
     
-    /**
-     * Busca produtos por marca
-     */
+//busca produtos por marca
     public List<Produto> buscarPorMarca(String marca) throws SQLException {
         String sql = "SELECT * FROM Produto WHERE marca LIKE ?";
         List<Produto> produtos = new ArrayList<>();
@@ -103,9 +94,7 @@ public class ProdutoDao {
         return produtos;
     }
     
-    /**
-     * Busca produtos por gênero
-     */
+    //busca produtos por gênero
     public List<Produto> buscarPorGenero(String genero) throws SQLException {
         String sql = "SELECT * FROM Produto WHERE genero = ?";
         List<Produto> produtos = new ArrayList<>();
@@ -125,9 +114,7 @@ public class ProdutoDao {
         return produtos;
     }
     
-    /**
-     * Busca produtos com estoque baixo (menor ou igual ao limite)
-     */
+     //busca produtos com estoque baixo 
     public List<Produto> buscarEstoqueBaixo(int limite) throws SQLException {
         String sql = "SELECT * FROM Produto WHERE estoque <= ?";
         List<Produto> produtos = new ArrayList<>();
@@ -147,9 +134,7 @@ public class ProdutoDao {
         return produtos;
     }
     
-    /**
-     * Busca produtos por faixa de preço
-     */
+    //busca por faixa de preço
     public List<Produto> buscarPorFaixaPreco(double precoMin, double precoMax) throws SQLException {
         String sql = "SELECT * FROM Produto WHERE preco BETWEEN ? AND ?";
         List<Produto> produtos = new ArrayList<>();
@@ -170,9 +155,7 @@ public class ProdutoDao {
         return produtos;
     }
     
-    /**
-     * Atualiza um produto existente
-     */
+    //att um produto existente
     public void atualizar(Produto produto) throws SQLException {
         String sql = "UPDATE Produto SET tamanho = ?, cor = ?, marca = ?, genero = ?, " +
                      "preco = ?, estoque = ?, descricao = ? WHERE id = ?";
@@ -197,9 +180,7 @@ public class ProdutoDao {
         }
     }
     
-    /**
-     * Atualiza apenas o estoque do produto
-     */
+    //att o estoque do produto
     public void atualizarEstoque(int id, int novoEstoque) throws SQLException {
         String sql = "UPDATE Produto SET estoque = ? WHERE id = ?";
         
@@ -217,11 +198,9 @@ public class ProdutoDao {
         }
     }
     
-    /**
-     * Diminui o estoque do produto (usado em vendas)
-     */
+    //atualiza o estoque de acordo com as vendas feitas
     public boolean diminuirEstoque(int id, int quantidade) throws SQLException {
-        // Primeiro verifica se há estoque suficiente
+        //se há estoque
         Produto produto = buscarPorId(id);
         
         if (produto == null) {
@@ -229,7 +208,7 @@ public class ProdutoDao {
         }
         
         if (produto.getEstoque() < quantidade) {
-            return false; // Estoque insuficiente
+            return false; 
         }
         
         String sql = "UPDATE Produto SET estoque = estoque - ? WHERE id = ? AND estoque >= ?";
@@ -246,9 +225,7 @@ public class ProdutoDao {
         }
     }
     
-    /**
-     * Aumenta o estoque do produto (usado em reposição)
-     */
+//reposição
     public void aumentarEstoque(int id, int quantidade) throws SQLException {
         String sql = "UPDATE Produto SET estoque = estoque + ? WHERE id = ?";
         
@@ -266,9 +243,7 @@ public class ProdutoDao {
         }
     }
     
-    /**
-     * Deleta um produto
-     */
+    //deleta produto
     public void deletar(int id) throws SQLException {
         String sql = "DELETE FROM Produto WHERE id = ?";
         
@@ -285,9 +260,7 @@ public class ProdutoDao {
         }
     }
     
-    /**
-     * Verifica se um produto existe
-     */
+    //verifica se ecxiste produto
     public boolean existe(int id) throws SQLException {
         String sql = "SELECT COUNT(*) FROM Produto WHERE id = ?";
         
@@ -305,10 +278,7 @@ public class ProdutoDao {
         
         return false;
     }
-    
-    /**
-     * Conta total de produtos
-     */
+
     public int contarProdutos() throws SQLException {
         String sql = "SELECT COUNT(*) FROM Produto";
         
@@ -324,9 +294,6 @@ public class ProdutoDao {
         return 0;
     }
     
-    /**
-     * Extrai objeto Produto do ResultSet
-     */
     private Produto extrairProdutoDoResultSet(ResultSet rs) throws SQLException {
         Produto produto = new Produto();
         produto.setId(rs.getInt("id"));
