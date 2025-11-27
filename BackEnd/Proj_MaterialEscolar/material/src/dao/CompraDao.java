@@ -14,9 +14,8 @@ import java.sql.SQLException;
 
 public class CompraDao {
     
-    /**
-     * Insere uma nova compra no banco
-     */
+    //Insere uma nova compra no banco
+     
     public void inserir(Compra compra) throws SQLException {
         String sql = "INSERT INTO Compra (data_compra, data_entrega, id_produto, id_cliente, quantidade, valorTotal) " +
                      "VALUES (?, ?, ?, ?, ?, ?)";
@@ -42,9 +41,7 @@ public class CompraDao {
         }
     }
     
-    /**
-     * Busca todas as compras
-     */
+    //Busca todas as compras
     public List<Compra> listarTodas() throws SQLException {
         String sql = "SELECT * FROM Compra";
         List<Compra> compras = new ArrayList<>();
@@ -61,9 +58,9 @@ public class CompraDao {
         return compras;
     }
     
-    /**
-     * Busca compra por ID
-     */
+    
+        //Busca compra por ID
+     
     public Compra buscarPorId(int id) throws SQLException {
         String sql = "SELECT * FROM Compra WHERE idCompra = ?";
         
@@ -82,9 +79,8 @@ public class CompraDao {
         return null;
     }
     
-    /**
-     * Lista compras atrasadas
-     */
+    //Lista as compras em atraso
+
     public List<Compra> listarComprasAtrasadas() throws SQLException {
         String sql = "SELECT * FROM Compra WHERE data_entrega < NOW()";
         List<Compra> compras = new ArrayList<>();
@@ -101,9 +97,8 @@ public class CompraDao {
         return compras;
     }
     
-    /**
-     * Lista compras por período
-     */
+    //Lista as compras por data
+
     public List<Compra> listarPorPeriodo(LocalDateTime inicio, LocalDateTime fim) throws SQLException {
         String sql = "SELECT * FROM Compra WHERE data_compra BETWEEN ? AND ?";
         List<Compra> compras = new ArrayList<>();
@@ -124,9 +119,8 @@ public class CompraDao {
         return compras;
     }
     
-    /**
-     * Atualiza a data de entrega
-     */
+    //Atualiza a data de entrega
+
     public void atualizarDataEntrega(int idCompra, LocalDateTime novaDataEntrega) throws SQLException {
         String sql = "UPDATE Compra SET data_entrega = ? WHERE idCompra = ?";
         
@@ -140,9 +134,8 @@ public class CompraDao {
         }
     }
     
-    /**
-     * Deleta uma compra
-     */
+    //Deleta uma compra
+
     public void deletar(int id) throws SQLException {
         String sql = "DELETE FROM Compra WHERE idCompra = ?";
         
@@ -154,9 +147,8 @@ public class CompraDao {
         }
     }
     
-    /**
-     * Extrai objeto Compra do ResultSet
-     */
+    //Faz a extração do objeto compra do ResultSet
+    
     private Compra extrairCompraDoResultSet(ResultSet rs) throws SQLException {
         Compra compra = new Compra();
         compra.setIdCompra(rs.getInt("idCompra"));
