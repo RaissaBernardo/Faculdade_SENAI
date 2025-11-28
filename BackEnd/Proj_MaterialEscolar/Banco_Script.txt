@@ -12,23 +12,24 @@ CREATE TABLE Endereco (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_cliente VARCHAR(14),
     rua VARCHAR(150),
+    cidade VARCHAR(100),
+    estado VARCHAR(2),
     cep VARCHAR(20),
-    num VARCHAR(10),
     bairro VARCHAR(100),
-    complemento VARCHAR(100),
+    numero VARCHAR(10),
     FOREIGN KEY (id_cliente) REFERENCES Cliente(cpf)
 );
 
-
 CREATE TABLE Produto (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    tamanho VARCHAR(20),
+    nome VARCHAR(80),
+    descricao VARCHAR(255),
+    preco DECIMAL(10,2),
+    tamanho DOUBLE,
     cor VARCHAR(30),
     marca VARCHAR(50),
     genero VARCHAR(20),
-    preco DECIMAL(10,2),
-    estoque INT,
-    descricao VARCHAR(255)
+    estoque INT
 );
 
 CREATE TABLE Compra (
@@ -42,3 +43,14 @@ CREATE TABLE Compra (
     FOREIGN KEY (id_produto) REFERENCES Produto(id),
     FOREIGN KEY (id_cliente) REFERENCES Cliente(cpf)
 );
+
+
+INSERT INTO Produto (nome, descricao, preco, tamanho, cor, marca, genero, estoque)
+VALUES
+('Caderno Universitário', 'Caderno 200 folhas capa dura', 29.90, 20.0, 'Azul', 'Tilibra', 'Unissex', 50),
+('Mochila Escolar', 'Mochila resistente com 3 compartimentos', 129.99, 45.0, 'Preta', 'Nike', 'Unissex', 25),
+('Lápis HB2', 'Lápis grafite HB número 2', 1.50, 0.0, 'Amarelo', 'Faber-Castell', 'Unissex', 200),
+('Caneta Azul', 'Caneta esferográfica azul', 2.50, 0.0, 'Azul', 'BIC', 'Unissex', 150),
+('Borracha Branca', 'Borracha escolar branca', 3.20, 0.0, 'Branco', 'Mercur', 'Unissex', 180),
+('Régua 30cm', 'Régua plástica transparente 30cm', 4.99, 30.0, 'Transparente', 'Tris', 'Unissex', 70);
+

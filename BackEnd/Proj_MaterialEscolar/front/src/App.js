@@ -19,8 +19,9 @@ const App = () => {
     }
   });
   const [loading, setLoading] = useState(false);
+  const [produtos, setProdutos] = useState([]);
+  const [produtosFiltrados, setProdutosFiltrados] = useState([]);
 
-  // Novo: histórico de entregas/compras
   const [purchaseHistory, setPurchaseHistory] = useState([]);
 
   const mostrarAba = (aba) => {
@@ -32,8 +33,52 @@ const App = () => {
     setTotalValue(totalValue + produto.preco);
   };
 
-  const finalizarCompra = () => {
-    // Salva compra no histórico
+const finalizarCompra = async () => {
+  try {
+    const clienteResp = await fetch("http://localhost:4567/clientes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nome: cliente.nome,
+        cpf: cliente.cpf,
+        telefone: cliente.telefone,
+        email: cliente.email
+      })
+    });
+
+    const clienteCriado = await clienteResp.json();
+    const idCliente = clienteCriado.idCliente; //retorna o ID aqui
+
+    await fetch("http://localhost:4567/enderecos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id_cliente: idCliente,
+        cep: cliente.endereco.cep,
+        rua: cliente.endereco.rua,
+        num: cliente.endereco.numero,
+        bairro: cliente.endereco.bairro,
+        complemento: cliente.endereco.complemento
+      })
+    });
+
+    for (let item of cart) {
+      const compraObj = {
+        dataCompra: new Date().toISOString(),
+        dataEntrega: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), // entrega +5 dias
+        idProduto: item.id,
+        idCliente: idCliente,
+        quantidade: 1,
+        valorTotal: item.preco
+      };
+
+      await fetch("http://localhost:4567/compras", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(compraObj)
+      });
+    }
+
     const novaCompra = {
       id: Date.now(),
       date: new Date().toLocaleString(),
@@ -42,27 +87,65 @@ const App = () => {
       clienteName: cliente.nome || 'Cliente',
       items: cart
     };
-    setPurchaseHistory([novaCompra, ...purchaseHistory]);
 
-    // Limpa carrinho e total
+    setPurchaseHistory([novaCompra, ...purchaseHistory]);
     setCart([]);
     setTotalValue(0);
+    setActiveTab("sucesso");
 
-    // Vai para tela de sucesso
-    setActiveTab('sucesso');
-  };
+  } catch (err) {
+    alert("Erro ao finalizar compra!");
+    console.error(err);
+  }
+};
 
   const voltarParaProdutos = () => {
     setActiveTab('produtos');
   };
 
   const aplicarFiltros = () => {
-    // Função para aplicar filtros de busca
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  };
+  const busca = document.getElementById("buscaInput").value.toLowerCase();
+  const genero = document.getElementById("filtroGenero").value;
+  const marca = document.getElementById("filtroMarca").value;
+
+  let filtrados = produtos;
+
+  if (busca) {
+    filtrados = filtrados.filter(p =>
+      p.nome.toLowerCase().includes(busca)
+    );
+  }
+
+  if (genero !== "todos") {
+    filtrados = filtrados.filter(p => p.genero === genero);
+  }
+
+  if (marca !== "todos") {
+    filtrados = filtrados.filter(p => p.marca === marca);
+  }
+
+  setProdutosFiltrados(filtrados);
+};
+
+  React.useEffect(() => {
+  if (activeTab === "produtos") {
+    carregarProdutos();
+  }
+}, [activeTab]);
+
+const carregarProdutos = async () => {
+  setLoading(true);
+  try {
+    const resp = await fetch("http://localhost:4567/produtos");
+    const data = await resp.json();
+    setProdutos(data);
+    setProdutosFiltrados(data);
+  } catch (err) {
+    console.error("Erro ao carregar produtos:", err);
+  }
+  setLoading(false);
+};
+
 
   return (
     <div>
@@ -111,61 +194,83 @@ const App = () => {
         </div>
 
         {/* ABA PRODUTOS */}
-        {activeTab === 'produtos' && (
-          <div id="abaProdutos" className="tab-content">
-            {/* Filtros */}
-            <div className="filters">
-              <div className="filter-grid">
-                <input
-                  type="text"
-                  id="buscaInput"
-                  className="filter-input"
-                  placeholder="Buscar produtos..."
-                  onKeyUp={aplicarFiltros}
-                />
-                <select
-                  id="filtroGenero"
-                  className="filter-select"
-                  onChange={aplicarFiltros}
-                >
-                  <option value="todos">Todos os Gêneros</option>
-                  <option value="Masculino">Masculino</option>
-                  <option value="Feminino">Feminino</option>
-                  <option value="Unissex">Unissex</option>
-                </select>
-                <select
-                  id="filtroMarca"
-                  className="filter-select"
-                  onChange={aplicarFiltros}
-                >
-                  <option value="todos">Todas as Marcas</option>
-                </select>
-              </div>
-            </div>
+    {activeTab === 'produtos' && (
+      <div id="abaProdutos" className="tab-content">
 
-            {/* Loading */}
-            {loading && (
-              <div id="loading" className="loading">
-                <div className="spinner"></div>
-                <p>Carregando produtos...</p>
-              </div>
-            )}
+        {/* Filtros */}
+        <div className="filters">
+          <div className="filter-grid">
+            <input
+              type="text"
+              id="buscaInput"
+              className="filter-input"
+              placeholder="Buscar produtos..."
+              onKeyUp={aplicarFiltros}
+            />
 
-            {/* Grid de Produtos */}
-            <div id="productsGrid" className="products-grid">
-              {/* Aqui você pode mapear os produtos dinâmicos. Exemplo */}
-              {/* <ProductItem produto={produto} onAddToCart={adicionarAoCarrinho} /> */}
-            </div>
+            <select
+              id="filtroGenero"
+              className="filter-select"
+              onChange={aplicarFiltros}
+            >
+              <option value="todos">Todos os Gêneros</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Feminino">Feminino</option>
+              <option value="Unissex">Unissex</option>
+            </select>
 
-            {/* Mensagem Vazio */}
-            {cart.length === 0 && (
-              <div id="emptyProducts" className="empty-message">
-                <h2>Nenhum produto encontrado</h2>
-                <p>Tente ajustar os filtros de busca</p>
-              </div>
-            )}
+            <select
+              id="filtroMarca"
+              className="filter-select"
+              onChange={aplicarFiltros}
+            >
+              <option value="todos">Todas as Marcas</option>
+
+              {/* Preenche marcas automaticamente */}
+              {[...new Set(produtos.map(p => p.marca))].map((m, idx) => (
+                <option key={idx} value={m}>{m}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Loading */}
+        {loading && (
+          <div id="loading" className="loading">
+            <div className="spinner"></div>
+            <p>Carregando produtos...</p>
           </div>
         )}
+
+        {/* Grid de Produtos */}
+        <div id="productsGrid" className="products-grid">
+          {produtosFiltrados.length > 0 &&
+            produtosFiltrados.map((produto) => (
+              <div key={produto.id} className="product-card">
+                <h3>{produto.nome}</h3>
+                <p className="brand">{produto.marca}</p>
+                <p className="gender">{produto.genero}</p>
+                <p className="price">R$ {produto.preco.toFixed(2)}</p>
+
+                <button
+                  className="add-btn"
+                  onClick={() => adicionarAoCarrinho(produto)}
+                >
+                  Adicionar ao Carrinho
+                </button>
+              </div>
+            ))}
+        </div>
+
+        {/* Mensagem Vazio */}
+        {produtosFiltrados.length === 0 && !loading && (
+          <div id="emptyProducts" className="empty-message">
+            <h2>Nenhum produto encontrado</h2>
+            <p>Tente ajustar os filtros de busca</p>
+          </div>
+        )}
+      </div>
+    )}
 
         {/* ABA CARRINHO */}
         {activeTab === 'carrinho' && (

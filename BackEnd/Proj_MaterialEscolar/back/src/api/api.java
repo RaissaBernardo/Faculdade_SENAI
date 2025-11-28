@@ -118,11 +118,10 @@ public class api {
             return "";
         });
 
-
-        //ENDEREÇOS API
-        get("/produtos", (req, res) ->
-            gson.toJson(produtoDao.listarTodos())
-        );
+        get("/produtos", (req, res) -> {
+            res.type("application/json");
+            return new Gson().toJson(produtoDao.listarTodos());
+        });
 
         get("/produtos/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
