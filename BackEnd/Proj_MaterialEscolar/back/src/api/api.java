@@ -1,11 +1,5 @@
 package api;
 
-
-import dao.ClienteDao;
-import dao.EnderecoDao;
-import dao.ProdutoDao;
-import dao.CompraDao;
-
 import entity.Cliente;
 import entity.Endereco;
 import entity.Produto;
@@ -13,11 +7,9 @@ import entity.Compra;
 
 //IMPORTS IGUAL DO PROFESSOR
 import static spark.Spark.*;
-import spark.Request;
-import spark.Response;
-import spark.Route;
-import spark.Filter;
 import com.google.gson.Gson;
+
+import dao.*;
 
 
 public class api {
@@ -56,7 +48,6 @@ public class api {
         after((req, res) -> res.type("application/json"));
 
 
-
         //CLIENTE - APIS
         get("/clientes", (req, res) ->
             gson.toJson(clienteDao.buscarTodos())
@@ -91,14 +82,15 @@ public class api {
             return "";
         });
 
-        
+
         //ENDEREÇOS - API
         get("/enderecos", (req, res) ->
             gson.toJson(enderecoDao.buscarTodos())
         );
 
         get("/enderecos/:id", (req, res) -> {
-            Endereco e = enderecoDao.buscarPorId(Integer.parseInt(req.params("id")));
+            int id = Integer.parseInt(req.params("id"));
+            Endereco e = enderecoDao.buscarPorId(id);
             if (e == null) {
                 res.status(404);
                 return "{\"erro\":\"Endereço não encontrado\"}";
@@ -115,7 +107,7 @@ public class api {
 
         put("/enderecos/:id", (req, res) -> {
             Endereco e = gson.fromJson(req.body(), Endereco.class);
-            e.setId(Long.parseLong(req.params("id")));
+            e.setId(Integer.parseInt(req.params("id")));
             enderecoDao.atualizar(e);
             return gson.toJson(e);
         });
@@ -129,11 +121,12 @@ public class api {
 
         //ENDEREÇOS API
         get("/produtos", (req, res) ->
-            gson.toJson(produtoDao.buscarTodos())
+            gson.toJson(produtoDao.listarTodos())
         );
 
         get("/produtos/:id", (req, res) -> {
-            Produto p = produtoDao.buscarPorId(Integer.parseInt(req.params("id")));
+            int id = Integer.parseInt(req.params("id"));
+            Produto p = produtoDao.buscarPorId(id);
             if (p == null) {
                 res.status(404);
                 return "{\"erro\":\"Produto não encontrado\"}";
@@ -161,14 +154,15 @@ public class api {
             return "";
         });
 
-    
+
         //COMPRAS APIS
         get("/compras", (req, res) ->
-            gson.toJson(compraDao.buscarTodos())
+            gson.toJson(compraDao.listarTodas())
         );
 
         get("/compras/:id", (req, res) -> {
-            Compra c = compraDao.buscarPorId(Integer.parseInt(req.params("id")));
+            int id = Integer.parseInt(req.params("id"));
+            Compra c = compraDao.buscarPorId(id);
             if (c == null) {
                 res.status(404);
                 return "{\"erro\":\"Compra não encontrada\"}";
@@ -180,13 +174,6 @@ public class api {
             Compra c = gson.fromJson(req.body(), Compra.class);
             compraDao.inserir(c);
             res.status(201);
-            return gson.toJson(c);
-        });
-
-        put("/compras/:id", (req, res) -> {
-            Compra c = gson.fromJson(req.body(), Compra.class);
-            c.setIdCompra(Integer.parseInt(req.params("id")));
-            compraDao.atualizar(c);
             return gson.toJson(c);
         });
 

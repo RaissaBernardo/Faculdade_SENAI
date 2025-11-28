@@ -1,7 +1,7 @@
 package entity;
 
 public class Endereco {
-    private Long id;
+    private int id;
     private String rua;
     private String cidade;
     private String estado;
@@ -9,13 +9,6 @@ public class Endereco {
     private String bairro;
     private String numero;
 
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
     public String getNumero() {
         return numero;
     }
@@ -62,11 +55,18 @@ public class Endereco {
         this.cep = cep;
     }
 
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+
     //construtor
     public Endereco() {
     }
 
-    public Endereco(Long id, String rua, String cidade, String estado, String cep, String bairro, String numero) {
+    public Endereco(int id, String rua, String cidade, String estado, String cep, String bairro, String numero) {
         this.id = id;
         this.rua = rua;
         this.cidade = cidade;
@@ -75,5 +75,4 @@ public class Endereco {
         this.bairro = bairro;
         this.numero = numero;
     }
-
 }   

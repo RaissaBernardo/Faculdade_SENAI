@@ -12,7 +12,8 @@ import banco.ConnectionFactory;
 import entity.Endereco;
 
 public class EnderecoDao {
-    //busca todos
+
+    //buscar todos
     public List<Endereco> buscarTodos() {
         List<Endereco> enderecos = new ArrayList<>();
         String sql = "SELECT id, rua, cidade, estado, cep, bairro, numero FROM endereco";
@@ -23,7 +24,7 @@ public class EnderecoDao {
 
             while (rs.next()) {
                 Endereco endereco = new Endereco(
-                        rs.getLong("id"),
+                        rs.getInt("id"),
                         rs.getString("rua"),
                         rs.getString("cidade"),
                         rs.getString("estado"),
@@ -43,20 +44,20 @@ public class EnderecoDao {
         return enderecos;
     }
 
-    //pelo id
-    public Endereco buscarPorId(Long id) {
+    //buscar por ID
+    public Endereco buscarPorId(int id) {
         Endereco endereco = null;
         String sql = "SELECT id, rua, cidade, estado, cep, bairro, numero FROM endereco WHERE id = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setLong(1, id);
+            stmt.setInt(1, id);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     endereco = new Endereco(
-                            rs.getLong("id"),
+                            rs.getInt("id"),
                             rs.getString("rua"),
                             rs.getString("cidade"),
                             rs.getString("estado"),
@@ -75,7 +76,7 @@ public class EnderecoDao {
         return endereco;
     }
 
-    //insert
+    //inserir
     public void inserir(Endereco endereco) {
         String sql = "INSERT INTO endereco (rua, cidade, estado, cep, bairro, numero) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -91,10 +92,10 @@ public class EnderecoDao {
 
             stmt.executeUpdate();
 
-            // pega o ID auto increment
+            // pega ID auto increment
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
-                    endereco.setId(rs.getLong(1));
+                    endereco.setId(rs.getInt(1));
                 }
             }
 
@@ -104,7 +105,7 @@ public class EnderecoDao {
         }
     }
 
-    // editar
+    //atualizar
     public void atualizar(Endereco endereco) {
         String sql = "UPDATE endereco SET rua = ?, cidade = ?, estado = ?, cep = ?, bairro = ?, numero = ? WHERE id = ?";
 
@@ -117,7 +118,7 @@ public class EnderecoDao {
             stmt.setString(4, endereco.getCep());
             stmt.setString(5, endereco.getBairro());
             stmt.setString(6, endereco.getNumero());
-            stmt.setLong(7, endereco.getId());
+            stmt.setInt(7, endereco.getId());
 
             stmt.executeUpdate();
 
@@ -127,14 +128,14 @@ public class EnderecoDao {
         }
     }
 
-    //apagar
-    public void deletar(Long id) {
+    //deletar
+    public void deletar(int id) {
         String sql = "DELETE FROM endereco WHERE id = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setLong(1, id);
+            stmt.setInt(1, id);
             stmt.executeUpdate();
 
         } catch (SQLException e) {
