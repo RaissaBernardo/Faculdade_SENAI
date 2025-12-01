@@ -11,25 +11,27 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ProdutoDao {
-//insert um produto no banco
+
+    // insere
     public void inserir(Produto produto) throws SQLException {
-        String sql = "INSERT INTO Produto (tamanho, cor, marca, genero, preco, estoque, descricao) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Produto (nome, tamanho, cor, marca, genero, preco, estoque, descricao) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
-            stmt.setDouble(1, produto.getTamanho());
-            stmt.setString(2, produto.getCor());
-            stmt.setString(3, produto.getMarca());
-            stmt.setString(4, produto.getGenero());
-            stmt.setDouble(5, produto.getPreco());
-            stmt.setInt(6, produto.getEstoque());
-            stmt.setString(7, produto.getDescricao());
+            stmt.setString(1, produto.getNome());
+            stmt.setDouble(2, produto.getTamanho());
+            stmt.setString(3, produto.getCor());
+            stmt.setString(4, produto.getMarca());
+            stmt.setString(5, produto.getGenero());
+            stmt.setDouble(6, produto.getPreco());
+            stmt.setInt(7, produto.getEstoque());
+            stmt.setString(8, produto.getDescricao());
             
             stmt.executeUpdate();
             
-            // pega o id gerado aurotmaticamente
+            // pegar ID gerado
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
                     produto.setId(rs.getInt(1));
@@ -38,7 +40,7 @@ public class ProdutoDao {
         }
     }
     
-   //lista produtos
+    // retorna
     public List<Produto> listarTodos() throws SQLException {
         String sql = "SELECT * FROM Produto";
         List<Produto> produtos = new ArrayList<>();
@@ -54,8 +56,8 @@ public class ProdutoDao {
         
         return produtos;
     }
-    
-//busca produto por id
+
+    //busca
     public Produto buscarPorId(int id) throws SQLException {
         String sql = "SELECT * FROM Produto WHERE id = ?";
         
@@ -73,8 +75,8 @@ public class ProdutoDao {
         
         return null;
     }
-    
-//busca produtos por marca
+
+    // busca porm arca
     public List<Produto> buscarPorMarca(String marca) throws SQLException {
         String sql = "SELECT * FROM Produto WHERE marca LIKE ?";
         List<Produto> produtos = new ArrayList<>();
@@ -93,8 +95,8 @@ public class ProdutoDao {
         
         return produtos;
     }
-    
-    //busca produtos por gênero
+
+    //busca por genero
     public List<Produto> buscarPorGenero(String genero) throws SQLException {
         String sql = "SELECT * FROM Produto WHERE genero = ?";
         List<Produto> produtos = new ArrayList<>();
@@ -113,8 +115,8 @@ public class ProdutoDao {
         
         return produtos;
     }
-    
-     //busca produtos com estoque baixo 
+
+
     public List<Produto> buscarEstoqueBaixo(int limite) throws SQLException {
         String sql = "SELECT * FROM Produto WHERE estoque <= ?";
         List<Produto> produtos = new ArrayList<>();
@@ -133,8 +135,7 @@ public class ProdutoDao {
         
         return produtos;
     }
-    
-    //busca por faixa de preço
+
     public List<Produto> buscarPorFaixaPreco(double precoMin, double precoMax) throws SQLException {
         String sql = "SELECT * FROM Produto WHERE preco BETWEEN ? AND ?";
         List<Produto> produtos = new ArrayList<>();
@@ -154,23 +155,24 @@ public class ProdutoDao {
         
         return produtos;
     }
-    
-    //att um produto existente
+
+    // att
     public void atualizar(Produto produto) throws SQLException {
-        String sql = "UPDATE Produto SET tamanho = ?, cor = ?, marca = ?, genero = ?, " +
+        String sql = "UPDATE Produto SET nome = ?, tamanho = ?, cor = ?, marca = ?, genero = ?, " +
                      "preco = ?, estoque = ?, descricao = ? WHERE id = ?";
         
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setDouble(1, produto.getTamanho());
-            stmt.setString(2, produto.getCor());
-            stmt.setString(3, produto.getMarca());
-            stmt.setString(4, produto.getGenero());
-            stmt.setDouble(5, produto.getPreco());
-            stmt.setInt(6, produto.getEstoque());
-            stmt.setString(7, produto.getDescricao());
-            stmt.setInt(8, produto.getId());
+            stmt.setString(1, produto.getNome());
+            stmt.setDouble(2, produto.getTamanho());
+            stmt.setString(3, produto.getCor());
+            stmt.setString(4, produto.getMarca());
+            stmt.setString(5, produto.getGenero());
+            stmt.setDouble(6, produto.getPreco());
+            stmt.setInt(7, produto.getEstoque());
+            stmt.setString(8, produto.getDescricao());
+            stmt.setInt(9, produto.getId());
             
             int linhasAfetadas = stmt.executeUpdate();
             
@@ -179,8 +181,8 @@ public class ProdutoDao {
             }
         }
     }
-    
-    //att o estoque do produto
+
+    // estoque att
     public void atualizarEstoque(int id, int novoEstoque) throws SQLException {
         String sql = "UPDATE Produto SET estoque = ? WHERE id = ?";
         
@@ -197,10 +199,8 @@ public class ProdutoDao {
             }
         }
     }
-    
-    //atualiza o estoque de acordo com as vendas feitas
+
     public boolean diminuirEstoque(int id, int quantidade) throws SQLException {
-        //se há estoque
         Produto produto = buscarPorId(id);
         
         if (produto == null) {
@@ -224,8 +224,8 @@ public class ProdutoDao {
             return linhasAfetadas > 0;
         }
     }
-    
-//reposição
+
+    // aumentar estoque
     public void aumentarEstoque(int id, int quantidade) throws SQLException {
         String sql = "UPDATE Produto SET estoque = estoque + ? WHERE id = ?";
         
@@ -242,8 +242,8 @@ public class ProdutoDao {
             }
         }
     }
-    
-    //deleta produto
+
+    // deletar produto
     public void deletar(int id) throws SQLException {
         String sql = "DELETE FROM Produto WHERE id = ?";
         
@@ -259,8 +259,8 @@ public class ProdutoDao {
             }
         }
     }
-    
-    //verifica se ecxiste produto
+
+    // existe?
     public boolean existe(int id) throws SQLException {
         String sql = "SELECT COUNT(*) FROM Produto WHERE id = ?";
         
@@ -279,6 +279,7 @@ public class ProdutoDao {
         return false;
     }
 
+    // quantidade total
     public int contarProdutos() throws SQLException {
         String sql = "SELECT COUNT(*) FROM Produto";
         
@@ -293,10 +294,11 @@ public class ProdutoDao {
         
         return 0;
     }
-    
+
     private Produto extrairProdutoDoResultSet(ResultSet rs) throws SQLException {
         Produto produto = new Produto();
         produto.setId(rs.getInt("id"));
+        produto.setNome(rs.getString("nome"));
         produto.setTamanho(rs.getDouble("tamanho"));
         produto.setCor(rs.getString("cor"));
         produto.setMarca(rs.getString("marca"));
