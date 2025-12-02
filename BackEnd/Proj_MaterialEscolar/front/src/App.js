@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
 
+const { useState, useEffect } = React;
+//todo front
 const App = () => {
   const [activeTab, setActiveTab] = useState('produtos');
   const [cart, setCart] = useState([]);
@@ -23,9 +25,17 @@ const App = () => {
   const [produtosFiltrados, setProdutosFiltrados] = useState([]);
 
   const [purchaseHistory, setPurchaseHistory] = useState([]);
+  const [adminTab, setAdminTab] = useState('clientes');
+  const [clientes, setClientes] = useState([]);
+  const [enderecos, setEnderecos] = useState([]);
+  const [compras, setCompras] = useState([]);
+  const [lastPurchase, setLastPurchase] = useState(null);
 
   const mostrarAba = (aba) => {
     setActiveTab(aba);
+    if (aba === 'admin') {
+      carregarDadosAdmin();
+    }
   };
 
   const adicionarAoCarrinho = (produto) => {
@@ -47,7 +57,7 @@ const finalizarCompra = async () => {
     });
 
     const clienteCriado = await clienteResp.json();
-    const idCliente = clienteCriado.idCliente; //retorna o ID aqui
+    const idCliente = clienteCriado.idCliente;
 
     await fetch("http://localhost:4567/enderecos", {
       method: "POST",
@@ -65,7 +75,7 @@ const finalizarCompra = async () => {
     for (let item of cart) {
       const compraObj = {
         dataCompra: new Date().toISOString(),
-        dataEntrega: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), // entrega +5 dias
+        dataEntrega: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
         idProduto: item.id,
         idCliente: idCliente,
         quantidade: 1,
@@ -88,6 +98,8 @@ const finalizarCompra = async () => {
       items: cart
     };
 
+    // salvar resumo para mostrar na aba de sucesso antes de limpar estado
+    setLastPurchase(novaCompra);
     setPurchaseHistory([novaCompra, ...purchaseHistory]);
     setCart([]);
     setTotalValue(0);
@@ -127,7 +139,7 @@ const finalizarCompra = async () => {
   setProdutosFiltrados(filtrados);
 };
 
-  React.useEffect(() => {
+  useEffect(() => {
   if (activeTab === "produtos") {
     carregarProdutos();
   }
@@ -146,15 +158,250 @@ const carregarProdutos = async () => {
   setLoading(false);
 };
 
+// ===== CRUD CLIENTES =====
+const carregarClientes = async () => {
+  try {
+    const resp = await fetch("http://localhost:4567/clientes");
+    const data = await resp.json();
+    setClientes(data);
+  } catch (err) {
+    console.error("Erro ao carregar clientes:", err);
+  }
+};
+
+const buscarClientePorCpf = async (cpf) => {
+  try {
+    const resp = await fetch(`http://localhost:4567/clientes/${cpf}`);
+    if (resp.status === 404) {
+      alert("Cliente não encontrado");
+      return null;
+    }
+    return await resp.json();
+  } catch (err) {
+    console.error("Erro ao buscar cliente:", err);
+    return null;
+  }
+};
+
+const atualizarCliente = async (cpf, clienteData) => {
+  try {
+    const resp = await fetch(`http://localhost:4567/clientes/${cpf}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(clienteData)
+    });
+    const data = await resp.json();
+    alert("Cliente atualizado com sucesso!");
+    carregarClientes();
+    return data;
+  } catch (err) {
+    console.error("Erro ao atualizar cliente:", err);
+    alert("Erro ao atualizar cliente!");
+  }
+};
+
+const deletarCliente = async (cpf) => {
+  if (!window.confirm("Deseja realmente deletar este cliente?")) return;
+  try {
+    await fetch(`http://localhost:4567/clientes/${cpf}`, {
+      method: "DELETE"
+    });
+    alert("Cliente deletado com sucesso!");
+    carregarClientes();
+  } catch (err) {
+    console.error("Erro ao deletar cliente:", err);
+    alert("Erro ao deletar cliente!");
+  }
+};
+
+// ===== CRUD ENDEREÇOS =====
+const carregarEnderecos = async () => {
+  try {
+    const resp = await fetch("http://localhost:4567/enderecos");
+    const data = await resp.json();
+    setEnderecos(data);
+  } catch (err) {
+    console.error("Erro ao carregar endereços:", err);
+  }
+};
+
+const buscarEnderecoPorId = async (id) => {
+  try {
+    const resp = await fetch(`http://localhost:4567/enderecos/${id}`);
+    if (resp.status === 404) {
+      alert("Endereço não encontrado");
+      return null;
+    }
+    return await resp.json();
+  } catch (err) {
+    console.error("Erro ao buscar endereço:", err);
+    return null;
+  }
+};
+
+const criarEndereco = async (enderecoData) => {
+  try {
+    const resp = await fetch("http://localhost:4567/enderecos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(enderecoData)
+    });
+    const data = await resp.json();
+    alert("Endereço criado com sucesso!");
+    carregarEnderecos();
+    return data;
+  } catch (err) {
+    console.error("Erro ao criar endereço:", err);
+    alert("Erro ao criar endereço!");
+  }
+};
+
+const atualizarEndereco = async (id, enderecoData) => {
+  try {
+    const resp = await fetch(`http://localhost:4567/enderecos/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(enderecoData)
+    });
+    const data = await resp.json();
+    alert("Endereço atualizado com sucesso!");
+    carregarEnderecos();
+    return data;
+  } catch (err) {
+    console.error("Erro ao atualizar endereço:", err);
+    alert("Erro ao atualizar endereço!");
+  }
+};
+
+const deletarEndereco = async (id) => {
+  if (!window.confirm("Deseja realmente deletar este endereço?")) return;
+  try {
+    await fetch(`http://localhost:4567/enderecos/${id}`, {
+      method: "DELETE"
+    });
+    alert("Endereço deletado com sucesso!");
+    carregarEnderecos();
+  } catch (err) {
+    console.error("Erro ao deletar endereço:", err);
+    alert("Erro ao deletar endereço!");
+  }
+};
+
+// ===== CRUD PRODUTOS =====
+const buscarProdutoPorId = async (id) => {
+  try {
+    const resp = await fetch(`http://localhost:4567/produtos/${id}`);
+    if (resp.status === 404) {
+      alert("Produto não encontrado");
+      return null;
+    }
+    return await resp.json();
+  } catch (err) {
+    console.error("Erro ao buscar produto:", err);
+    return null;
+  }
+};
+
+const criarProduto = async (produtoData) => {
+  try {
+    const resp = await fetch("http://localhost:4567/produtos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(produtoData)
+    });
+    const data = await resp.json();
+    alert("Produto criado com sucesso!");
+    carregarProdutos();
+    return data;
+  } catch (err) {
+    console.error("Erro ao criar produto:", err);
+    alert("Erro ao criar produto!");
+  }
+};
+
+const atualizarProduto = async (id, produtoData) => {
+  try {
+    const resp = await fetch(`http://localhost:4567/produtos/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(produtoData)
+    });
+    const data = await resp.json();
+    alert("Produto atualizado com sucesso!");
+    carregarProdutos();
+    return data;
+  } catch (err) {
+    console.error("Erro ao atualizar produto:", err);
+    alert("Erro ao atualizar produto!");
+  }
+};
+
+const deletarProduto = async (id) => {
+  if (!window.confirm("Deseja realmente deletar este produto?")) return;
+  try {
+    await fetch(`http://localhost:4567/produtos/${id}`, {
+      method: "DELETE"
+    });
+    alert("Produto deletado com sucesso!");
+    carregarProdutos();
+  } catch (err) {
+    console.error("Erro ao deletar produto:", err);
+    alert("Erro ao deletar produto!");
+  }
+};
+
+// ===== CRUD COMPRAS =====
+const carregarCompras = async () => {
+  try {
+    const resp = await fetch("http://localhost:4567/compras");
+    const data = await resp.json();
+    setCompras(data); // Atualiza o estado com as compras recebidas
+  } catch (err) {
+    console.error("Erro ao carregar compras:", err);
+  }
+};
+
+const buscarCompraPorId = async (id) => {
+  try {
+    const resp = await fetch(`http://localhost:4567/compras/${id}`);
+    if (resp.status === 404) {
+      alert("Compra não encontrada");
+      return null;
+    }
+    return await resp.json();
+  } catch (err) {
+    console.error("Erro ao buscar compra:", err);
+    return null;
+  }
+};
+
+const deletarCompra = async (id) => {
+  if (!window.confirm("Deseja realmente deletar esta compra?")) return;
+  try {
+    await fetch(`http://localhost:4567/compras/${id}`, {
+      method: "DELETE"
+    });
+    alert("Compra deletada com sucesso!");
+    carregarCompras();
+  } catch (err) {
+    console.error("Erro ao deletar compra:", err);
+    alert("Erro ao deletar compra!");
+  }
+};
+
+const carregarDadosAdmin = () => {
+  carregarClientes();
+  carregarEnderecos();
+  carregarProdutos();
+  carregarCompras();
+};
 
   return (
     <div>
-      {/* Header */}
       <header>
         <div className="container">
           <div className="header-content">
-            {/* remove emoji */}
-            <h1>E-Commerce SENAI</h1>
+            <h1>E-Commerce </h1>
             <button className="cart-btn" onClick={() => mostrarAba('carrinho')}>
               Carrinho
               <span className="cart-badge">{cart.length}</span>
@@ -164,7 +411,6 @@ const carregarProdutos = async () => {
       </header>
 
       <div className="container">
-        {/* Tabs */}
         <div className="tabs">
           <button
             className={`tab-btn ${activeTab === 'produtos' ? 'active' : ''}`}
@@ -184,20 +430,23 @@ const carregarProdutos = async () => {
           >
             Checkout
           </button>
-          {/* Nova aba */}
           <button
             className={`tab-btn ${activeTab === 'entrega' ? 'active' : ''}`}
             onClick={() => mostrarAba('entrega')}
           >
             Entrega / Histórico
           </button>
+          <button
+            className={`tab-btn ${activeTab === 'admin' ? 'active' : ''}`}
+            onClick={() => mostrarAba('admin')}
+          >
+            Admin (CRUD)
+          </button>
         </div>
 
-        {/* ABA PRODUTOS */}
-    {activeTab === 'produtos' && (
+        {activeTab === 'produtos' && (
       <div id="abaProdutos" className="tab-content">
 
-        {/* Filtros */}
         <div className="filters">
           <div className="filter-grid">
             <input
@@ -225,8 +474,6 @@ const carregarProdutos = async () => {
               onChange={aplicarFiltros}
             >
               <option value="todos">Todas as Marcas</option>
-
-              {/* Preenche marcas automaticamente */}
               {[...new Set(produtos.map(p => p.marca))].map((m, idx) => (
                 <option key={idx} value={m}>{m}</option>
               ))}
@@ -234,7 +481,6 @@ const carregarProdutos = async () => {
           </div>
         </div>
 
-        {/* Loading */}
         {loading && (
           <div id="loading" className="loading">
             <div className="spinner"></div>
@@ -242,7 +488,6 @@ const carregarProdutos = async () => {
           </div>
         )}
 
-        {/* Grid de Produtos */}
         <div id="productsGrid" className="products-grid">
           {produtosFiltrados.length > 0 &&
             produtosFiltrados.map((produto) => (
@@ -262,7 +507,6 @@ const carregarProdutos = async () => {
             ))}
         </div>
 
-        {/* Mensagem Vazio */}
         {produtosFiltrados.length === 0 && !loading && (
           <div id="emptyProducts" className="empty-message">
             <h2>Nenhum produto encontrado</h2>
@@ -272,7 +516,6 @@ const carregarProdutos = async () => {
       </div>
     )}
 
-        {/* ABA CARRINHO */}
         {activeTab === 'carrinho' && (
           <div id="abaCarrinho" className="tab-content">
             {cart.length === 0 ? (
@@ -285,7 +528,6 @@ const carregarProdutos = async () => {
               </div>
             ) : (
               <div id="carrinhoItens" className="cart-items">
-                {/* Mapear os itens do carrinho aqui */}
                 {cart.map((item, idx) => (
                   <div key={idx} className="cart-item">
                     <div className="cart-item-name">{item.nome || 'Produto'}</div>
@@ -310,13 +552,10 @@ const carregarProdutos = async () => {
           </div>
         )}
 
-        {/* ABA CHECKOUT */}
         {activeTab === 'checkout' && (
           <div id="abaCheckout" className="tab-content">
             <div className="checkout-grid">
-              {/* Formulários */}
               <div className="forms-section">
-                {/* Dados do Cliente */}
                 <div className="form-card">
                   <h2>Dados do Cliente</h2>
                   <div className="form-group">
@@ -368,7 +607,6 @@ const carregarProdutos = async () => {
                   </div>
                 </div>
 
-                {/* Endereço */}
                 <div className="form-card">
                   <h2>Endereço de Entrega</h2>
                   <div className="form-group">
@@ -458,7 +696,6 @@ const carregarProdutos = async () => {
                 </div>
               </div>
 
-              {/* Resumo do Pedido */}
               <div className="summary-section">
                 <div className="form-card summary-card">
                   <h2>Resumo do Pedido</h2>
@@ -493,7 +730,6 @@ const carregarProdutos = async () => {
           </div>
         )}
 
-        {/* ABA ENTREGA / HISTÓRICO */}
         {activeTab === 'entrega' && (
           <div id="abaEntrega" className="tab-content">
             <div className="form-card">
@@ -531,27 +767,26 @@ const carregarProdutos = async () => {
           </div>
         )}
 
-        {/* ABA SUCESSO */}
         {activeTab === 'sucesso' && (
           <div id="abaSucesso" className="tab-content">
             <div className="success-card">
               <div className="success-icon"></div>
               <h1>Compra Realizada com Sucesso!</h1>
               <p className="success-message">
-                Obrigado pela sua compra, <span id="successClienteName">{cliente.nome}</span>!
+                Obrigado pela sua compra, <span id="successClienteName">{lastPurchase?.clienteName ?? cliente.nome}</span>!
               </p>
 
               <div className="success-details">
                 <div className="success-detail-item">
                   <div className="detail-label">Total Pago</div>
                   <div className="detail-value success-total">
-                    {`R$ ${totalValue.toFixed(2)}`}
+                    {`R$ ${Number(lastPurchase?.total ?? totalValue).toFixed(2)}`}
                   </div>
                 </div>
                 <div className="success-detail-item">
                   <div className="detail-label">Itens Comprados</div>
                   <div className="detail-value success-items">
-                    {cart.length}
+                    {lastPurchase?.itemsCount ?? cart.length}
                   </div>
                 </div>
               </div>
@@ -562,6 +797,306 @@ const carregarProdutos = async () => {
             </div>
           </div>
         )}
+
+        {activeTab === 'admin' && (
+          <div id="abaAdmin" className="tab-content">
+            <div className="admin-panel">
+              <h2>Painel Administrativo</h2>
+              
+              <div className="admin-tabs">
+                <button
+                  className={`admin-tab-btn ${adminTab === 'clientes' ? 'active' : ''}`}
+                  onClick={() => setAdminTab('clientes')}
+                >
+                  Clientes
+                </button>
+                <button
+                  className={`admin-tab-btn ${adminTab === 'enderecos' ? 'active' : ''}`}
+                  onClick={() => setAdminTab('enderecos')}
+                >
+                  Endereços
+                </button>
+                <button
+                  className={`admin-tab-btn ${adminTab === 'produtos' ? 'active' : ''}`}
+                  onClick={() => setAdminTab('produtos')}
+                >
+                  Produtos
+                </button>
+                <button
+                  className={`admin-tab-btn ${adminTab === 'compras' ? 'active' : ''}`}
+                  onClick={() => setAdminTab('compras')}
+                >
+                  Compras
+                </button>
+              </div>
+
+              {adminTab === 'clientes' && (
+                <div className="admin-section">
+                  <h3>Gerenciar Clientes</h3>
+                  <div style={{display:'flex', gap:8, marginBottom:8}}>
+                    <button className="btn-primary" onClick={carregarClientes}>Atualizar Lista</button>
+                    <button
+                      className="btn-primary"
+                      onClick={async () => {
+                        const cpf = prompt("CPF para buscar:");
+                        if (!cpf) return;
+                        const res = await buscarClientePorCpf(cpf);
+                        if (res) {
+                          alert(`Cliente:\nNome: ${res.nome}\nCPF: ${res.cpf}\nEmail: ${res.email}\nTel: ${res.telefone}`);
+                        }
+                      }}
+                    >
+                      Buscar por CPF
+                    </button>
+                  </div>
+                  <div className="admin-list">
+                    {clientes.map((cli) => (
+                      <div key={cli.cpf} className="admin-item">
+                        <div className="admin-item-info">
+                          <strong>{cli.nome}</strong>
+                          <p>CPF: {cli.cpf}</p>
+                          <p>Email: {cli.email}</p>
+                          <p>Telefone: {cli.telefone}</p>
+                        </div>
+                        <div className="admin-item-actions">
+                          <button
+                            className="btn-edit"
+                            onClick={async () => {
+                              const nome = prompt("Novo nome:", cli.nome);
+                              const email = prompt("Novo email:", cli.email);
+                              const telefone = prompt("Novo telefone:", cli.telefone);
+                              if (nome && email) {
+                                await atualizarCliente(cli.cpf, {
+                                  nome,
+                                  cpf: cli.cpf,
+                                  email,
+                                  telefone: telefone || cli.telefone
+                                });
+                              }
+                            }}
+                          >
+                            Editar
+                          </button>
+                          <button
+                            className="btn-delete"
+                            onClick={() => deletarCliente(cli.cpf)}
+                          >
+                            Deletar
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {adminTab === 'enderecos' && (
+                <div className="admin-section">
+                  <h3>Gerenciar Endereços</h3>
+                  <div style={{display:'flex', gap:8, marginBottom:8}}>
+                    <button className="btn-primary" onClick={carregarEnderecos}>Atualizar Lista</button>
+                    <button
+                      className="btn-primary"
+                      onClick={async () => {
+                        // criar endereço via prompt simples
+                        const id_cliente = prompt("ID do cliente:");
+                        const cep = prompt("CEP:");
+                        const rua = prompt("Rua:");
+                        const num = prompt("Número:");
+                        const bairro = prompt("Bairro:");
+                        const complemento = prompt("Complemento:");
+                        if (!id_cliente || !cep || !rua) { alert("Campos mínimos obrigatórios."); return; }
+                        await criarEndereco({ id_cliente, cep, rua, num, bairro, complemento });
+                      }}
+                    >
+                      Criar Endereço
+                    </button>
+                    <button
+                      className="btn-primary"
+                      onClick={async () => {
+                        const id = prompt("ID do endereço:");
+                        if (!id) return;
+                        const res = await buscarEnderecoPorId(id);
+                        if (res) alert(JSON.stringify(res, null, 2));
+                      }}
+                    >
+                      Buscar por ID
+                    </button>
+                  </div>
+
+                  <div className="admin-list">
+                    {enderecos.map((end) => (
+                      <div key={end.id} className="admin-item">
+                        <div className="admin-item-info">
+                          <strong>ID: {end.id}</strong>
+                          <p>Cliente ID: {end.id_cliente}</p>
+                          <p>Rua: {end.rua}</p>
+                          <p>CEP: {end.cep}</p>
+                          <p>Número: {end.num ?? end.numero}</p>
+                          <p>Bairro: {end.bairro}</p>
+                          <p>Complemento: {end.complemento}</p>
+                        </div>
+                        <div className="admin-item-actions">
+                          <button
+                            className="btn-edit"
+                            onClick={async () => {
+                              const cep = prompt("Novo CEP:", end.cep);
+                              const rua = prompt("Nova rua:", end.rua);
+                              const num = prompt("Novo número:", end.num ?? end.numero);
+                              const bairro = prompt("Novo bairro:", end.bairro);
+                              const complemento = prompt("Novo complemento:", end.complemento || "");
+                              if (cep && rua) {
+                                await atualizarEndereco(end.id, {
+                                  id_cliente: end.id_cliente,
+                                  cep,
+                                  rua,
+                                  num,
+                                  bairro,
+                                  complemento
+                                });
+                              }
+                            }}
+                          >
+                            Editar
+                          </button>
+                          <button
+                            className="btn-delete"
+                            onClick={() => deletarEndereco(end.id)}
+                          >
+                            Deletar
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {adminTab === 'produtos' && (
+                <div className="admin-section">
+                  <h3>Gerenciar Produtos</h3>
+                  <div style={{display:'flex', gap:8, marginBottom:8}}>
+                    <button className="btn-primary" onClick={carregarProdutos}>Atualizar Lista</button>
+                    <button
+                      className="btn-primary"
+                      onClick={async () => {
+                        // criar produto via prompt simples
+                        const nome = prompt("Nome do produto:");
+                        const marca = prompt("Marca:");
+                        const genero = prompt("Gênero:");
+                        const precoStr = prompt("Preço (use ponto):");
+                        const estoqueStr = prompt("Estoque (inteiro):", "0");
+                        const preco = parseFloat(precoStr);
+                        const estoque = parseInt(estoqueStr, 10) || 0;
+                        if (!nome || !marca || isNaN(preco)) { alert("Dados inválidos."); return; }
+                        await criarProduto({ nome, marca, genero, preco, estoque });
+                      }}
+                    >
+                      Criar Produto
+                    </button>
+                    <button
+                      className="btn-primary"
+                      onClick={async () => {
+                        const id = prompt("ID do produto:");
+                        if (!id) return;
+                        const res = await buscarProdutoPorId(id);
+                        if (res) alert(JSON.stringify(res, null, 2));
+                      }}
+                    >
+                      Buscar por ID
+                    </button>
+                  </div>
+
+                  <div className="admin-list">
+                    {produtos.map((prod) => (
+                      <div key={prod.id} className="admin-item">
+                        <div className="admin-item-info">
+                          <strong>{prod.nome}</strong>
+                          <p>Marca: {prod.marca}</p>
+                          <p>Gênero: {prod.genero}</p>
+                          <p>Preço: R$ {Number(prod.preco).toFixed(2)}</p>
++                         <p>Estoque: {prod.estoque ?? prod.quantidade ?? prod.stock ?? prod.qtd ?? 0}</p>
+                        </div>
+                        <div className="admin-item-actions">
+                          <button
+                            className="btn-edit"
+                            onClick={async () => {
+                              const nome = prompt("Novo nome:", prod.nome);
+                              const marca = prompt("Nova marca:", prod.marca);
+                              const genero = prompt("Novo gênero:", prod.genero);
+                              const precoStr = prompt("Novo preço (use ponto):", String(prod.preco));
+                              const preco = parseFloat(precoStr);
+                              if (nome && marca && !isNaN(preco)) {
+                                await atualizarProduto(prod.id, {
+                                  nome,
+                                  marca,
+                                  genero,
+                                  preco
+                                });
+                              } else {
+                                alert("Dados inválidos. Atualização cancelada.");
+                              }
+                            }}
+                          >
+                            Editar
+                          </button>
+                          <button
+                            className="btn-delete"
+                            onClick={() => deletarProduto(prod.id)}
+                          >
+                            Deletar
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {adminTab === 'compras' && (
+                <div className="admin-section">
+                  <h3>Gerenciar Compras</h3>
+                  <div style={{display:'flex', gap:8, marginBottom:8}}>
+                    <button className="btn-primary" onClick={carregarCompras}>Atualizar Lista</button>
+                    <button
+                      className="btn-primary"
+                      onClick={async () => {
+                        const id = prompt("ID da compra:");
+                        if (!id) return;
+                        const res = await buscarCompraPorId(id);
+                        if (res) alert(JSON.stringify(res, null, 2));
+                      }}
+                    >
+                      Buscar por ID
+                    </button>
+                  </div>
+
+                  <div className="admin-list">
+                    {compras.map((c) => (
+                      <div key={c.id} className="admin-item">
+                        <div className="admin-item-info">
+                          <strong>ID Compra: {c.id}</strong>
+                          <p>Data: {c.dataCompra ?? c.data ?? c.createdAt}</p>
+                          <p>Cliente ID: {c.idCliente ?? c.id_cliente}</p>
+                          <p>Valor Total: R$ {Number(c.valorTotal ?? c.total ?? 0).toFixed(2)}</p>
+                        </div>
+                        <div className="admin-item-actions">
+                          <button
+                            className="btn-delete"
+                            onClick={() => deletarCompra(c.id)}
+                          >
+                            Deletar
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
