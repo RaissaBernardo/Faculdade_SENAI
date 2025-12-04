@@ -1,0 +1,33 @@
+CREATE DATABASE IF NOT EXISTS aulajdbc;
+USE aulajdbc;
+
+-- Tabela Categorias
+CREATE TABLE IF NOT EXISTS Categorias (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL
+);
+
+-- Tabela Produtos
+CREATE TABLE IF NOT EXISTS Produtos (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    preco DECIMAL(10, 2) NOT NULL,
+    estoque INT NOT NULL,
+    id_categoria BIGINT,
+    FOREIGN KEY (id_categoria) REFERENCES Categorias(id)
+);
+
+-- Inserindo categorias
+INSERT INTO Categorias (nome) VALUES ('Eletrônicos');
+INSERT INTO Categorias (nome) VALUES ('Vestuário');
+INSERT INTO Categorias (nome) VALUES ('Alimentos');
+
+-- Inserindo produtos
+INSERT INTO Produtos (nome, preco, estoque, id_categoria)
+VALUES ('Smartphone', 1999.99, 50, 1);
+
+INSERT INTO Produtos (nome, preco, estoque, id_categoria)
+VALUES ('Camiseta', 49.90, 200, 2);
+
+INSERT INTO Produtos (nome, preco, estoque, id_categoria)
+VALUES ('Arroz', 4.99, 500, 3);
